@@ -1,13 +1,18 @@
 const express = require("express");
 const shortid = require("shortid");
+const dotenv = require("dotenv");
+
+const connectDB = require("./config/db");
+const Url = require("./models/Url");
+
+dotenv.config();
+connectDB();
 
 const app = express();
 app.use(express.json());
 
-const urlDB = {}; 
-
 // Create short URL
-app.post("/shorten", (req, res) => {
+app.post("/shorten", async (req, res) => {
   const { originalUrl } = req.body;
 
   if (!originalUrl) {
@@ -15,24 +20,30 @@ app.post("/shorten", (req, res) => {
   }
 
   const shortId = shortid.generate();
-  urlDB[shortId] = originalUrl;
+
+  const newUrl = new Url({
+    shortId,
+    originalUrl
+  });
+
+  await newUrl.save();
 
   res.json({
-    shortUrl: `http://localhost:3000/${shortId}`
+    shortUrl: `http://localhost:${process.env.PORT}/${shortId}`
   });
 });
 
-// Redirect 
-app.get("/:shortId", (req, res) => {
-  const originalUrl = urlDB[req.params.shortId];
+// Redirect to original URL
+app.get("/:shortId", async (req, res) => {
+  const url = await Url.findOne({ shortId: req.params.shortId });
 
-  if (!originalUrl) {
+  if (!url) {
     return res.status(404).json({ error: "URL not found" });
   }
 
-  res.redirect(originalUrl);
+  res.redirect(url.originalUrl);
 });
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+app.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
 });
