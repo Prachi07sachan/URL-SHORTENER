@@ -9,6 +9,18 @@ const urlSchema = new mongoose.Schema({
   originalUrl: {
     type: String,
     required: true
+  },
+  clicks: {
+    type: Number,
+    default: 0
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false
   }
 });
 

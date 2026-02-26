@@ -5,25 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>URL Shortener</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
 
-  <div class="wrapper">
-    <h1>URL Shortener</h1>
-    <p class="subtitle">Shorten your long URLs instantly</p>
+  <div class="container">
+    <!-- Dark Mode Toggle -->
+    <button id="themeToggle" class="theme-toggle" title="Toggle dark mode">
+      <i class="fas fa-moon"></i>
+    </button>
 
-    <div class="card">
-      <input
-        type="text"
-        id="urlInput"
-        placeholder="Paste your long URL here"
-      />
-      <button onclick="shortenUrl()">Shorten URL</button>
+    <div class="wrapper">
+      <h1>URL Shortener</h1>
+      <p class="subtitle">Shorten your long URLs instantly</p>
 
-      <div id="result" class="result"></div>
+      <div class="card">
+        <!-- Input Section -->
+        <div class="input-group">
+          <input
+            type="text"
+            id="urlInput"
+            placeholder="Paste your long URL here"
+            onkeypress="handleEnter(event)"
+          />
+          <div class="validation-feedback" id="validationFeedback"></div>
+        </div>
+
+        <button onclick="shortenUrl()" class="btn-primary">
+          <i class="fas fa-link"></i> Shorten URL
+        </button>
+
+        <!-- Results Section -->
+        <div id="result" class="result"></div>
+
+        <!-- URL Info Display -->
+        <div id="urlInfo" class="url-info" style="display: none;">
+          <div class="info-item">
+            <span class="info-label">Clicks:</span>
+            <span id="clickCount" class="info-value">0</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Created:</span>
+            <span id="createdDate" class="info-value">-</span>
+          </div>
+        </div>
+
+        <!-- QR Code Section -->
+        <div id="qrCodeSection" class="qr-section" style="display: none;">
+          <p class="qr-label">QR Code:</p>
+          <div id="qrCode" class="qr-code"></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div id="actionButtons" class="action-buttons" style="display: none;">
+          <button onclick="copyToClipboard()" class="btn-secondary">
+            <i class="fas fa-copy"></i> Copy Link
+          </button>
+          <button onclick="deleteUrl()" class="btn-danger">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+
+        <!-- Notification -->
+        <div id="notification" class="notification"></div>
+      </div>
     </div>
   </div>
 
+  <!-- QR Code Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
